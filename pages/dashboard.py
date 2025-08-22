@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import datetime
+import time
 
 def smart_task_selector(api_client, auto_select_first=False):
     """
@@ -54,30 +55,33 @@ def smart_task_selector(api_client, auto_select_first=False):
     return None
 
 def show_dashboard(api_client):
-    """Show main dashboard with Instagram tracking tasks"""
-    st.markdown('<h1 class="brand-title">CodVid.AI</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="brand-subtitle">Instagram Analytics Dashboard</p>', unsafe_allow_html=True)
+    """Show the main dashboard with user profile and competitor tracking"""
     
-    # Get tracking tasks and user profile
+    # Page header
+    st.markdown('<h1 class="brand-title">CodVid.AI</h1>', unsafe_allow_html=True)
+    st.markdown('<h2 class="brand-subtitle">Instagram Analytics Dashboard</h2>', unsafe_allow_html=True)
+    
+    # Get tracking tasks
     tasks = api_client.get_tracking_tasks()
     
-    # Top section with user profile (left) and action buttons (right) - PERMANENT LAYOUT
-    col1, col2 = st.columns([2, 1], gap="medium")
+    # Top section: Left (Your Profile) and Right (Quick Actions)
+    col1, col2 = st.columns([2, 1])
     
     with col1:
         # Your Profile Section (Left)
         st.markdown('<h3 class="main-header">Your Profile</h3>', unsafe_allow_html=True)
         
-        # Find user's own profile
+        # Find own profile (non-competitor)
         own_profile = None
         if tasks:
-            own_profile = next((task for task in tasks if not task.get('is_competitor')), None)
+            own_profile = next((task for task in tasks if not task.get('is_competitor', False)), None)
         
         if own_profile:
+            # Display own profile information
             st.markdown(f"**Username:** @{own_profile['target_profile']}")
             st.markdown(f"**Status:** {own_profile.get('status', 'Active')}")
+            
             if own_profile.get('last_scraped'):
-                from datetime import datetime
                 last_scraped = datetime.fromtimestamp(own_profile['last_scraped'])
                 st.markdown(f"**Last Updated:** {last_scraped.strftime('%Y-%m-%d %H:%M')}")
             else:
@@ -86,12 +90,23 @@ def show_dashboard(api_client):
             # Add View Details and Delete buttons for own profile
             col_btn1, col_btn2 = st.columns(2)
             with col_btn1:
-                if st.button("View Details", key="view_own_profile", use_container_width=True):
+                if st.button(
+                    "View Details", 
+                    key="own_profile_view", 
+                    use_container_width=True,
+                    help="Click to view your profile analytics"
+                ):
                     st.session_state.current_profile = own_profile
                     st.session_state.current_page = 'profile_details'
                     st.rerun()
+            
             with col_btn2:
-                if st.button("Delete Task", key="delete_own_profile", use_container_width=True):
+                if st.button(
+                    "Delete Task", 
+                    key="own_profile_delete", 
+                    use_container_width=True,
+                    help="Delete your profile tracking task"
+                ):
                     if api_client.delete_tracking_task(own_profile['_id']):
                         st.success("Own profile task deleted!")
                         st.rerun()
@@ -134,53 +149,54 @@ def show_dashboard(api_client):
             st.session_state.current_page = 'login'
             st.rerun()
     
-                # Show add task form directly under Quick Actions if requested
-        if st.session_state.get('show_add_task', False):
-            st.markdown("---")
-            st.markdown('<h4 class="main-header">Create New Tracking Task</h4>', unsafe_allow_html=True)
-            with st.form("create_task_form"):
-                profile_name = st.text_input("Instagram Username", placeholder="e.g., foodxtaste")
-                is_competitor = st.checkbox("Track as Competitor (uncheck for Own Profile)")
-                
-                # Add scraping interval settings
-                st.markdown('<h5 class="main-header">Scraping Settings</h5>', unsafe_allow_html=True)
-                scrape_interval = st.number_input(
-                    "Scrape Interval (days)", 
-                    min_value=0.5, 
-                    max_value=30.0, 
-                    value=2.0,
-                    step=0.5,
-                    help="How often to automatically scrape this profile (0.5 = 12 hours, 1 = daily, 7 = weekly)"
-                )
-                
-                st.caption(f"Profile will be scraped every {scrape_interval} days")
-                
-                col_submit, col_cancel = st.columns(2)
-                with col_submit:
-                    submit = st.form_submit_button("Create Task", use_container_width=True)
-                with col_cancel:
-                    if st.form_submit_button("Cancel", use_container_width=True):
+    # Show add task form directly under Quick Actions if requested
+    if st.session_state.get('show_add_task', False):
+        st.markdown("---")
+        st.markdown('<h4 class="main-header">Create New Tracking Task</h4>', unsafe_allow_html=True)
+        
+        with st.form("create_task_form"):
+            profile_name = st.text_input("Instagram Username", placeholder="e.g., foodxtaste")
+            is_competitor = st.checkbox("Track as Competitor (uncheck for Own Profile)")
+            
+            # Add scraping interval settings
+            st.markdown('<h5 class="main-header">Scraping Settings</h5>', unsafe_allow_html=True)
+            scrape_interval = st.number_input(
+                "Scrape Interval (days)", 
+                min_value=0.5, 
+                max_value=30.0, 
+                value=2.0,
+                step=0.5,
+                help="How often to automatically scrape this profile (0.5 = 12 hours, 1 = daily, 7 = weekly)"
+            )
+            
+            st.caption(f"Profile will be scraped every {scrape_interval} days")
+            
+            col_submit, col_cancel = st.columns(2)
+            with col_submit:
+                submit = st.form_submit_button("Create Task", use_container_width=True)
+            with col_cancel:
+                if st.form_submit_button("Cancel", use_container_width=True):
+                    st.session_state.show_add_task = False
+                    st.rerun()
+            
+            if submit:
+                if profile_name:
+                    task_id = api_client.create_tracking_task(profile_name, is_competitor)
+                    if task_id:
+                        # Update the scrape interval after creation
+                        if api_client.update_scrape_interval(task_id, scrape_interval):
+                            st.success(f"Created tracking task for @{profile_name} with {scrape_interval}-day interval")
+                        else:
+                            st.success(f"Created tracking task for @{profile_name} (using default interval)")
                         st.session_state.show_add_task = False
                         st.rerun()
-                
-                if submit:
-                    if profile_name:
-                        task_id = api_client.create_tracking_task(profile_name, is_competitor)
-                        if task_id:
-                            # Update the scrape interval after creation
-                            if api_client.update_scrape_interval(task_id, scrape_interval):
-                                st.success(f"Created tracking task for @{profile_name} with {scrape_interval}-day interval")
-                            else:
-                                st.success(f"Created tracking task for @{profile_name} (using default interval)")
-                            st.session_state.show_add_task = False
-                            st.rerun()
-                        else:
-                            st.error("Failed to create tracking task")
                     else:
-                        st.error("Please enter a profile name")
-        
-        st.markdown("---")
-        
+                        st.error("Failed to create tracking task")
+                else:
+                    st.error("Please enter a profile name")
+    
+    st.markdown("---")
+    
     # Environment selector (based on notebooks)
     st.sidebar.subheader("Environment Settings")
     from config import Config
@@ -238,7 +254,7 @@ def show_dashboard(api_client):
                         with col_btn2:
                             if st.button(
                                 "Delete Task", 
-                                key=f"delete_profile_{task['_id']}", 
+                                key=f"delete_{task['_id']}", 
                                 use_container_width=True,
                                 help=f"Delete tracking task for @{task['target_profile']}"
                             ):
@@ -247,9 +263,7 @@ def show_dashboard(api_client):
                                     st.rerun()
                                 else:
                                     st.error(f"Failed to delete tracking task for @{task['target_profile']}")
-                        
-                        st.markdown("---")
-            
-            st.markdown("---")
-    
-    # Add task form is now shown directly under Quick Actions section 
+        else:
+            st.info("No competitor profiles found. Add some above!")
+    else:
+        st.info("No tracking tasks found. Create your first task above!") 
