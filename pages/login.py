@@ -2,14 +2,16 @@ import streamlit as st
 
 def show_login(api_client):
     """Show login and signup forms with account deletion"""
-    st.title("🔐 Instagram Analytics Dashboard")
+    # CodVid.AI Branding Header
+    st.markdown('<h1 class="brand-title">CodVid.AI</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="brand-subtitle">Premium Instagram Analytics & AI Insights</p>', unsafe_allow_html=True)
     st.markdown("---")
     
     # Create tabs for login and signup
     tab1, tab2, tab3 = st.tabs(["Login", "Sign Up", "Delete Account"])
     
     with tab1:
-        st.header("Login")
+        st.markdown('<h2 class="main-header">Login</h2>', unsafe_allow_html=True)
         with st.form("login_form"):
             email = st.text_input("Email", placeholder="your@email.com")
             password = st.text_input("Password", type="password")
@@ -31,7 +33,7 @@ def show_login(api_client):
                     st.error("Please fill in all fields.")
     
     with tab2:
-        st.header("Sign Up")
+        st.markdown('<h2 class="main-header">Sign Up</h2>', unsafe_allow_html=True)
         with st.form("signup_form"):
             email = st.text_input("Email", key="signup_email", placeholder="your@email.com")
             password = st.text_input("Password", type="password", key="signup_password")
@@ -52,7 +54,7 @@ def show_login(api_client):
                     st.error("Please fill in all fields.")
     
     with tab3:
-        st.header("⚠️ Delete Account")
+        st.markdown('<h2 class="main-header">Delete Account</h2>', unsafe_allow_html=True)
         st.warning("""
         **WARNING**: This will permanently delete your account and ALL associated data, including:
         • Instagram tracking tasks

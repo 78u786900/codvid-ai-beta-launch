@@ -11,8 +11,8 @@ import os
 
 def main():
     """Run the Streamlit application"""
-    print("🚀 Starting Instagram Analytics Dashboard...")
-    print("📱 Mobile-optimized web app for Instagram analytics")
+    print("🚀 Starting CodVid.AI Instagram Analytics Platform...")
+    print("📱 Premium, mobile-optimized web app for Instagram analytics")
     print("=" * 50)
     
     # Check if we're in the right directory

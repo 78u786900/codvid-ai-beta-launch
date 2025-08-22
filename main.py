@@ -28,6 +28,365 @@ st.set_page_config(
     initial_sidebar_state=Config.STREAMLIT_CONFIG["initial_sidebar_state"]
 )
 
+# Apply custom CSS for CodVid.AI branding
+def apply_custom_css():
+    st.markdown("""
+    <style>
+    .main-header {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        color: #000000;
+        margin-bottom: 1rem;
+    }
+    .brand-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #000000;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    .brand-subtitle {
+        font-size: 1.2rem;
+        color: #000000;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .premium-button {
+        background-color: #000000;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .premium-button:hover {
+        background-color: #333333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .card-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #E5E7EB;
+        margin-bottom: 1rem;
+    }
+    .profile-block {
+        background: #F9FAFB;
+        border: 2px solid #E5E7EB;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .profile-block:hover {
+        border-color: #000000;
+        background: #F0F0F0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Prevent page swipe on mobile */
+    body {
+        overscroll-behavior: none;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+    .stApp {
+        overscroll-behavior: none;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* Prevent pull-to-refresh and swipe gestures */
+    html {
+        overscroll-behavior: none;
+        touch-action: pan-y;
+    }
+    * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    /* Allow text selection for inputs and text areas */
+    input, textarea, [contenteditable] {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+    }
+    
+    /* PERMANENT LEFT/RIGHT LAYOUT - Never stack vertically */
+    .stColumns > div {
+        min-width: 0 !important;
+        flex-shrink: 0 !important;
+    }
+    
+    /* Force 2:1 ratio columns to stay horizontal */
+    .stColumns > div:first-child {
+        width: 66.666667% !important;
+        max-width: 66.666667% !important;
+        min-width: 66.666667% !important;
+    }
+    
+    .stColumns > div:last-child {
+        width: 33.333333% !important;
+        max-width: 33.333333% !important;
+        min-width: 33.333333% !important;
+    }
+    
+    /* Mobile responsive improvements */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding: 1rem 0.5rem;
+            max-width: 100%;
+        }
+        
+        /* Keep left/right layout even on mobile */
+        .stColumns > div:first-child {
+            width: 66.666667% !important;
+            max-width: 66.666667% !important;
+            min-width: 66.666667% !important;
+        }
+        
+        .stColumns > div:last-child {
+            width: 33.333333% !important;
+            max-width: 33.333333% !important;
+            min-width: 33.333333% !important;
+        }
+        
+        /* Better button spacing on mobile */
+        .stButton > button {
+            margin-bottom: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+        
+        /* Profile blocks mobile optimization */
+        .profile-block {
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Card containers mobile */
+        .card-container {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Brand title mobile */
+        .brand-title {
+            font-size: 2rem;
+        }
+        
+        .brand-subtitle {
+            font-size: 1rem;
+        }
+    }
+    
+    /* Remove default Streamlit spacing issues */
+    .element-container {
+        margin-bottom: 0 !important;
+    }
+    
+    /* Better spacing for sections */
+    .main-header {
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    /* Additional layout stability */
+    .stColumns {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: flex-start !important;
+    }
+    
+    /* Ensure dashboard layout never changes */
+    .dashboard-layout {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+    }
+    
+    /* Quick Actions form styling */
+    .stForm {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+    
+    /* Form inputs styling */
+    .stForm input, .stForm select {
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 0.5rem;
+    }
+    
+    /* Form buttons styling */
+    .stForm button {
+        background: #000000;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    
+    /* New Project Form styling */
+    .stExpander {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+    }
+    
+    .stExpander > div > div {
+        padding: 1rem;
+    }
+    
+    .stForm button:hover {
+        background: #333333;
+        transform: translateY(-1px);
+    }
+    
+    /* GLOBAL APP MARGINS AND WHITE SPACE - Applied to ALL pages */
+    .main .block-container {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+        padding-left: 4rem;
+        padding-right: 4rem;
+        max-width: 90%;
+        margin: 0 auto;
+    }
+    
+    /* Ensure proper spacing for mobile devices */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            max-width: 98%;
+        }
+    }
+    
+    /* Add spacing between sections */
+    .stMarkdown {
+        margin-bottom: 1rem;
+    }
+    
+    /* Better spacing for columns */
+    .stColumns > div {
+        padding: 0 0.5rem;
+    }
+    
+    /* Add some breathing room around the main content */
+    .stApp {
+        background-color: #f8fafc;
+        padding: 1rem !important;
+    }
+    
+    /* Prevent button cutoff and ensure proper spacing */
+    .stButton > button {
+        margin: 0.5rem 0 !important;
+        min-height: 44px !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Ensure top bar elements are fully visible */
+    .stColumns > div {
+        overflow: visible !important;
+        min-height: auto !important;
+    }
+    
+    .main .block-container {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    </style>
+    <script>
+    // Prevent swipe gestures
+    let startX, startY;
+    
+    document.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    });
+    
+    document.addEventListener('touchmove', function(e) {
+        if (!startX || !startY) return;
+        
+        let diffX = startX - e.touches[0].clientX;
+        let diffY = startY - e.touches[0].clientY;
+        
+        // Prevent horizontal swipes (left/right navigation)
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+    
+    document.addEventListener('touchend', function() {
+        startX = null;
+        startY = null;
+    });
+    
+    // Prevent browser back/forward swipe gestures
+    window.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 1) {
+            const touch = e.touches[0];
+            if (touch.clientX < 10 || touch.clientX > window.innerWidth - 10) {
+                e.preventDefault();
+            }
+        }
+    }, { passive: false });
+    
+
+    </script>
+    """, unsafe_allow_html=True)
+
+# Apply custom CSS
+apply_custom_css()
+
+def check_session_timeout():
+    """Check if user session has timed out and auto-logout if needed"""
+    if st.session_state.authenticated:
+        current_time = time.time()
+        time_since_last_activity = current_time - st.session_state.last_activity
+        
+        # Show warning at 13 minutes
+        if time_since_last_activity > 780:  # 13 minutes
+            if time_since_last_activity > st.session_state.session_timeout:
+                # Auto-logout after 15 minutes
+                st.session_state.authenticated = False
+                st.session_state.session_token = None
+                st.session_state.current_page = 'login'
+                st.warning("Session expired due to inactivity. Please login again.")
+                st.rerun()
+            else:
+                # Show warning
+                remaining_time = int(st.session_state.session_timeout - time_since_last_activity)
+                st.warning(f"Session will expire in {remaining_time} seconds due to inactivity.")
+        
+        # Update last activity on any user interaction
+        if st.session_state.get('_last_interaction_time', 0) != current_time:
+            st.session_state.last_activity = current_time
+            st.session_state._last_interaction_time = current_time
+
 # Initialize session state
 if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
@@ -55,6 +414,10 @@ if 'local_user_data' not in st.session_state:
         "global_data": {"ai_memory": {}, "video_reflections": {}},
         "projects": {}
     }
+if 'last_activity' not in st.session_state:
+    st.session_state.last_activity = time.time()
+if 'session_timeout' not in st.session_state:
+    st.session_state.session_timeout = 900  # 15 minutes in seconds
 
 class APIClient:
     """API client for interacting with the backend"""
@@ -572,6 +935,9 @@ class APIClient:
 
 def main():
     """Main application"""
+    # Check session timeout
+    check_session_timeout()
+    
     # Get API configuration
     api_url = Config.get_api_url()
     api_client = APIClient(api_url)
@@ -583,7 +949,7 @@ def main():
     # Debug sidebar controls
     with st.sidebar:
         st.markdown("---")
-        st.subheader("🛠️ Debug")
+        st.subheader("Debug")
         st.session_state.debug_mode = st.checkbox("Enable debug mode", value=st.session_state.debug_mode)
         if st.button("Clear API logs"):
             st.session_state.api_logs = []
@@ -618,7 +984,7 @@ def main():
     if st.session_state.debug_mode and st.session_state.api_logs:
         with st.sidebar:
             st.markdown("---")
-            st.subheader("📜 API Logs")
+            st.subheader("API Logs")
             # Show latest first
             for i, entry in enumerate(reversed(st.session_state.api_logs)):
                 title = f"{entry.get('method')} {entry.get('endpoint')} ({entry.get('response',{}).get('status_code', entry.get('response',{}).get('error', 'stream'))})"

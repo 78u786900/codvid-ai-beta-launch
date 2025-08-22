@@ -1,5 +1,5 @@
 """
-Configuration settings for the Instagram Analytics Dashboard
+Configuration settings for CodVid.AI Instagram Analytics Platform
 """
 
 import os
@@ -22,8 +22,8 @@ class Config:
     
     # Streamlit Configuration
     STREAMLIT_CONFIG = {
-        "page_title": "Instagram Analytics Dashboard",
-        "page_icon": "📊",
+        "page_title": "CodVid.AI - Instagram Analytics",
+        "page_icon": "📊",  # Will be updated to CodVid.AI logo
         "layout": "wide",
         "initial_sidebar_state": "collapsed"
     }
@@ -65,6 +65,18 @@ class Config:
         }
     }
     
+    # CodVid.AI Branding
+    BRANDING = {
+        "company_name": "CodVid.AI",
+        "app_name": "Instagram Analytics Platform",
+        "tagline": "Premium Instagram Analytics & AI Insights",
+        "primary_color": "#1E40AF",  # Blue
+        "secondary_color": "#6B7280",  # Gray
+        "accent_color": "#10B981",  # Green
+        "background_color": "#F9FAFB",  # Light gray
+        "text_color": "#111827"  # Dark gray
+    }
+    
     @classmethod
     def get_api_url(cls, environment: str = None) -> str:
         """Get API base URL for specified environment"""
@@ -95,5 +107,6 @@ class Config:
             "chart_config": cls.CHART_CONFIG,
             "scrape_intervals": cls.SCRAPE_INTERVALS,
             "pagination": cls.PAGINATION,
-            "sentiment_config": cls.SENTIMENT_CONFIG
+            "sentiment_config": cls.SENTIMENT_CONFIG,
+            "branding": cls.BRANDING
         } 

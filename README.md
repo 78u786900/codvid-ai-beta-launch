@@ -1,6 +1,6 @@
-# Instagram Analytics Dashboard
+# CodVid.AI - Instagram Analytics Platform
 
-A production-ready Streamlit mobile web app for Instagram analytics and tracking, built based on the functionality from the demo notebooks.
+A premium, production-ready Streamlit mobile web app for Instagram analytics and tracking, built with a focus on minimalistic design and AI-powered insights. Built based on the functionality from the demo notebooks.
 
 ## Features
 
